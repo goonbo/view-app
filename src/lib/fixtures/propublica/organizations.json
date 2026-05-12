@@ -1,0 +1,236 @@
+[
+  {
+    "ein": "742217350",
+    "legal_name": "Central Texas Food Bank Inc",
+    "address": "6500 METROPOLIS DR",
+    "city": "Austin",
+    "state": "TX",
+    "ntee_classification": "K31Z",
+    "ruling_date": "1982-07-01",
+    "total_assets": 114637232,
+    "filings": [
+      {
+        "tax_period": 2023,
+        "filing_date": "",
+        "total_revenue": 116286492,
+        "total_expenses": 111438399,
+        "program_service_revenue": 911507,
+        "executive_comp": 764938,
+        "total_assets": 104838627
+      },
+      {
+        "tax_period": 2022,
+        "filing_date": "",
+        "total_revenue": 114393673,
+        "total_expenses": 107798865,
+        "program_service_revenue": 2154528,
+        "executive_comp": 1207245,
+        "total_assets": 95128221
+      },
+      {
+        "tax_period": 2021,
+        "filing_date": "",
+        "total_revenue": 143237011,
+        "total_expenses": 117649958,
+        "program_service_revenue": 2744567,
+        "executive_comp": 1027514,
+        "total_assets": 84022611
+      }
+    ]
+  },
+  {
+    "ein": "530196605",
+    "legal_name": "American National Red Cross",
+    "address": "431 18TH ST NW",
+    "city": "Washington",
+    "state": "DC",
+    "ntee_classification": "P210",
+    "ruling_date": "1938-12-01",
+    "total_assets": 5052941623,
+    "filings": [
+      {
+        "tax_period": 2023,
+        "filing_date": "",
+        "total_revenue": 3217077611,
+        "total_expenses": 2971106889,
+        "program_service_revenue": 2167924872,
+        "executive_comp": 5947262,
+        "total_assets": 4028321133
+      },
+      {
+        "tax_period": 2022,
+        "filing_date": "",
+        "total_revenue": 3182229338,
+        "total_expenses": 3048182336,
+        "program_service_revenue": 2018755758,
+        "executive_comp": 5758532,
+        "total_assets": 3872181875
+      },
+      {
+        "tax_period": 2021,
+        "filing_date": "",
+        "total_revenue": 3090183560,
+        "total_expenses": 2796025309,
+        "program_service_revenue": 1999617756,
+        "executive_comp": 5750681,
+        "total_assets": 3668499985
+      }
+    ]
+  },
+  {
+    "ein": "943088881",
+    "legal_name": "Habitat For Humanity Greater San Francisco",
+    "address": "300 MONTGOMERY ST STE 450",
+    "city": "San Francisco",
+    "state": "CA",
+    "ntee_classification": null,
+    "ruling_date": "1987-01-01",
+    "total_assets": 49113663,
+    "filings": [
+      {
+        "tax_period": 2023,
+        "filing_date": "",
+        "total_revenue": 26946798,
+        "total_expenses": 31537348,
+        "program_service_revenue": 13820567,
+        "executive_comp": 1868132,
+        "total_assets": 45758272
+      },
+      {
+        "tax_period": 2022,
+        "filing_date": "",
+        "total_revenue": 21897783,
+        "total_expenses": 16131700,
+        "program_service_revenue": 6162320,
+        "executive_comp": 1241836,
+        "total_assets": 44871132
+      },
+      {
+        "tax_period": 2021,
+        "filing_date": "",
+        "total_revenue": 8969132,
+        "total_expenses": 6969561,
+        "program_service_revenue": 1215291,
+        "executive_comp": 1330240,
+        "total_assets": 37496129
+      }
+    ]
+  },
+  {
+    "ein": "363673599",
+    "legal_name": "Feeding America",
+    "address": "161 N CLARK ST STE 700",
+    "city": "Chicago",
+    "state": "IL",
+    "ntee_classification": "K310",
+    "ruling_date": "1990-01-01",
+    "total_assets": 572495646,
+    "filings": [
+      {
+        "tax_period": 2023,
+        "filing_date": "",
+        "total_revenue": 4916912461,
+        "total_expenses": 4933690967,
+        "program_service_revenue": 101808893,
+        "executive_comp": 7068165,
+        "total_assets": 626129732
+      },
+      {
+        "tax_period": 2022,
+        "filing_date": "",
+        "total_revenue": 4267241782,
+        "total_expenses": 4231609823,
+        "program_service_revenue": 47679794,
+        "executive_comp": 5987410,
+        "total_assets": 644823513
+      },
+      {
+        "tax_period": 2021,
+        "filing_date": "",
+        "total_revenue": 4065318094,
+        "total_expenses": 3902891407,
+        "program_service_revenue": 28800662,
+        "executive_comp": 5856188,
+        "total_assets": 603767243
+      }
+    ]
+  },
+  {
+    "ein": "135562976",
+    "legal_name": "Boys & Girls Clubs Of America",
+    "address": "1275 PEACHTREE STREET NW",
+    "city": "Atlanta",
+    "state": "GA",
+    "ntee_classification": "O230",
+    "ruling_date": "1999-08-01",
+    "total_assets": 95199320,
+    "filings": [
+      {
+        "tax_period": 2023,
+        "filing_date": "",
+        "total_revenue": 170722923,
+        "total_expenses": 230583168,
+        "program_service_revenue": 12464233,
+        "executive_comp": 4625589,
+        "total_assets": 89959878
+      },
+      {
+        "tax_period": 2022,
+        "filing_date": "",
+        "total_revenue": 205223013,
+        "total_expenses": 182869340,
+        "program_service_revenue": 10382117,
+        "executive_comp": 4715534,
+        "total_assets": 143916600
+      },
+      {
+        "tax_period": 2021,
+        "filing_date": "",
+        "total_revenue": 217713685,
+        "total_expenses": 200944382,
+        "program_service_revenue": 8730105,
+        "executive_comp": 5401088,
+        "total_assets": 147066134
+      }
+    ]
+  },
+  {
+    "ein": "746087356",
+    "legal_name": "Boys And Girls Clubs Of Austin And Travis County Inc",
+    "address": "6648 ED BLUESTEIN BLVD",
+    "city": "Austin",
+    "state": "TX",
+    "ntee_classification": "O23Z",
+    "ruling_date": "1967-10-01",
+    "total_assets": 32052667,
+    "filings": [
+      {
+        "tax_period": 2023,
+        "filing_date": "",
+        "total_revenue": 6298554,
+        "total_expenses": 6949891,
+        "program_service_revenue": 312189,
+        "executive_comp": 652324,
+        "total_assets": 32495196
+      },
+      {
+        "tax_period": 2022,
+        "filing_date": "",
+        "total_revenue": 7248942,
+        "total_expenses": 6771658,
+        "program_service_revenue": 185064,
+        "executive_comp": 788768,
+        "total_assets": 32570502
+      },
+      {
+        "tax_period": 2021,
+        "filing_date": "",
+        "total_revenue": 8192816,
+        "total_expenses": 7175367,
+        "program_service_revenue": 143375,
+        "executive_comp": 736987,
+        "total_assets": 22984634
+      }
+    ]
+  }
+]

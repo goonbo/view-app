@@ -1,0 +1,24 @@
+{
+  "title": "Quarterly Warehouse Produce Sort",
+  "description": "A three-hour Saturday morning shift sorting donated produce at our main warehouse. Volunteers will unload pallets, separate produce by type and condition, and repack into family-sized boxes. The sorted boxes feed into our mobile pantry distribution the following week.\n\nThe work is hands-on and physical. Volunteers leave with a clear sense of what scale food rescue looks like: 30 people in three hours typically clear 8,000-10,000 pounds.",
+  "suggested_capacity": 30,
+  "capacity_reasoning": "Past quarterly sorts have run comfortably at 25-32 volunteers; 30 hits the upper end without forcing overflow staging.",
+  "suggested_agenda": [
+    "9:00 — Arrive, sign in, gloves and hairnets distributed",
+    "9:15 — Brief from warehouse lead on sort criteria and safety",
+    "9:30 — Sort and pack (two crews, rotating between pallets and packing tables)",
+    "11:00 — Break: water, fruit, restrooms",
+    "11:15 — Final pack and warehouse cleanup",
+    "12:00 — Wrap, debrief, optional warehouse tour"
+  ],
+  "supplies_needed": [
+    "Closed-toe shoes (no sandals)",
+    "Water bottle",
+    "Light jacket (warehouse is cool in the morning)",
+    "Photo ID for sign-in"
+  ],
+  "followup_questions": [
+    "Do you want to cap this at exactly 30 or allow up to 35 if a corporate group asks?",
+    "Should the warehouse tour at 12:00 be confirmed or optional based on time?"
+  ]
+}

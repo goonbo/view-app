@@ -1,0 +1,12 @@
+{
+  "title": "Spring Backpack Drive 2026",
+  "story": "Every spring we put together 1,200 backpacks for students returning from the long school break — pencils, notebooks, a calculator, a paperback. Teachers tell us the kids who carry one home in March are visibly different by the end of the month. They show up with their things. They're prepared.\n\nThis year's drive funds the materials and the volunteer day to assemble them. Last year corporate teams from three Austin employers helped us pack 800 in a single afternoon. We're aiming higher this year because the school district referred 1,200 students for the program in advance.\n\nIf you want to do an on-site pack day instead of donating, message the team — we have a Saturday slot open in April.",
+  "suggested_goal": 18000,
+  "goal_reasoning": "$18,000 covers materials for 1,200 backpacks at our per-unit cost plus a buffer for the assembly day supplies.",
+  "giving_ladder": [
+    { "amount": 25, "description": "One fully-stocked backpack for one student" },
+    { "amount": 75, "description": "Three backpacks plus the calculator upgrade" },
+    { "amount": 150, "description": "Six backpacks — one classroom row" },
+    { "amount": 500, "description": "A full classroom of 20 students supplied" }
+  ]
+}

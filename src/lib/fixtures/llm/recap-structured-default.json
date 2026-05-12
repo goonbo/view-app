@@ -1,0 +1,37 @@
+{
+  "by_the_numbers": {
+    "hours": 66,
+    "volunteers": 22,
+    "families_served": 410,
+    "no_shows": 3,
+    "pre_sort_minutes_saved": 35
+  },
+  "outcomes": [
+    {
+      "headline": "Drive-through pacing held under 8 minutes",
+      "body": "Client wait stayed under 8 minutes after the first half hour. The pre-event sort meaningfully reduced setup time and is worth keeping as a standing procedure."
+    },
+    {
+      "headline": "Two interns ran the produce table unsupervised",
+      "body": "Engineering interns Janelle and Reza paired with regular Saturday volunteers and were running the table independently within 30 minutes. A low-friction onboarding pattern worth modeling for new hires."
+    },
+    {
+      "headline": "Mobility access is not solved",
+      "body": "One volunteer had to switch roles mid-event because the warehouse-to-staging route isn't wheelchair-friendly. We didn't ask on the registration form, which is a fix for next quarter."
+    }
+  ],
+  "recommendations": [
+    {
+      "headline": "Add mobility question to registration",
+      "body": "A single line on the form would have surfaced the issue before Saturday morning and given us time to plan around it. Add to the standard event template now."
+    },
+    {
+      "headline": "Order supplies against prior-event consumption, not headcount",
+      "body": "We ordered for headcount × 2 and shipped 40 unused boxes back to the warehouse. Past three events suggest 1.2× consumption is the right multiplier; update the order template."
+    },
+    {
+      "headline": "Repeat the Friday pre-sort",
+      "body": "It cut Saturday setup by 35 minutes and paid for itself in volunteer hours saved. Make it a standing operating procedure for any warehouse-side event."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "concern_level": "low",
+  "things_to_verify": [
+    "Whether enterprise-tier sponsorship is within Acme's CSR budget compared to direct local funding.",
+    "How sponsorship dollars route to local affiliates (general fund vs. restricted to specific clubs).",
+    "Reporting cadence — large national orgs often have once-a-year impact reporting, which may not match Acme's quarterly cycle."
+  ]
+}

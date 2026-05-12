@@ -1,0 +1,137 @@
+[
+  {
+    "ein": "742217350",
+    "legal_name": "Central Texas Food Bank Inc",
+    "common_name": "Central Texas Food Bank Inc",
+    "city": "Austin",
+    "state": "TX",
+    "location": "Austin, TX",
+    "ntee_classification": "K31Z"
+  },
+  {
+    "ein": "530196605",
+    "legal_name": "American National Red Cross",
+    "common_name": "American National Red Cross Shared Services Center",
+    "city": "Washington",
+    "state": "DC",
+    "location": "Washington, DC",
+    "ntee_classification": "P210"
+  },
+  {
+    "ein": "943088881",
+    "legal_name": "Habitat For Humanity Greater San Francisco",
+    "common_name": "Habitat For Humanity Greater San Francisco",
+    "city": "San Francisco",
+    "state": "CA",
+    "location": "San Francisco, CA",
+    "ntee_classification": null
+  },
+  {
+    "ein": "363673599",
+    "legal_name": "Feeding America",
+    "common_name": "Feeding America",
+    "city": "Chicago",
+    "state": "IL",
+    "location": "Chicago, IL",
+    "ntee_classification": "K310"
+  },
+  {
+    "ein": "135562976",
+    "legal_name": "Boys & Girls Clubs Of America",
+    "common_name": "Boys & Girls Clubs Of America",
+    "city": "Atlanta",
+    "state": "GA",
+    "location": "Atlanta, GA",
+    "ntee_classification": "O230"
+  },
+  {
+    "ein": "746087356",
+    "legal_name": "Boys And Girls Clubs Of Austin And Travis County Inc",
+    "common_name": "Boys And Girls Clubs Of Austin And Travis County Inc",
+    "city": "Austin",
+    "state": "TX",
+    "location": "Austin, TX",
+    "ntee_classification": "O23Z"
+  },
+  {
+    "ein": "742964260",
+    "legal_name": "Central Texas Food Bank Foundation",
+    "common_name": "Central Texas Food Bank Foundation",
+    "city": "Austin",
+    "state": "TX",
+    "location": "Austin, TX",
+    "ntee_classification": "K113"
+  },
+  {
+    "ein": "933176598",
+    "legal_name": "Feeding America Florida",
+    "common_name": "Feeding America Florida",
+    "city": "Miami",
+    "state": "FL",
+    "location": "Miami, FL",
+    "ntee_classification": "K99"
+  },
+  {
+    "ein": "921776845",
+    "legal_name": "Feeding America Texas",
+    "common_name": "Feeding America Texas",
+    "city": "Houston",
+    "state": "TX",
+    "location": "Houston, TX",
+    "ntee_classification": "K99"
+  },
+  {
+    "ein": "382439659",
+    "legal_name": "Feeding America West Michigan",
+    "common_name": "Feeding America West Michigan",
+    "city": "Kentwood",
+    "state": "MI",
+    "location": "Kentwood, MI",
+    "ntee_classification": null
+  },
+  {
+    "ein": "334633736",
+    "legal_name": "Feeding America Children Inc",
+    "common_name": "Feeding America Children Inc",
+    "city": "Glendale",
+    "state": "AZ",
+    "location": "Glendale, AZ",
+    "ntee_classification": "P30"
+  },
+  {
+    "ein": "331064638",
+    "legal_name": "Boys & Girls Clubs Of America",
+    "common_name": "Boys & Girls Clubs Of America Connecticut Alliance Of Boys & Girl",
+    "city": "Hartford",
+    "state": "CT",
+    "location": "Hartford, CT",
+    "ntee_classification": null
+  },
+  {
+    "ein": "861039968",
+    "legal_name": "Boys & Girls Clubs Of America",
+    "common_name": "Boys & Girls Clubs Of America Arizona Alliance Of Boys & Girls",
+    "city": "Mesa",
+    "state": "AZ",
+    "location": "Mesa, AZ",
+    "ntee_classification": null
+  },
+  {
+    "ein": "61653186",
+    "legal_name": "Boys & Girls Clubs Of America",
+    "common_name": "Boys & Girls Clubs Of America Colorado Alliance Of Boys & Girls C",
+    "city": "Denver",
+    "state": "CO",
+    "location": "Denver, CO",
+    "ntee_classification": null
+  },
+  {
+    "ein": "431870548",
+    "legal_name": "Boys & Girls Clubs Of America",
+    "common_name": "Boys & Girls Clubs Of America Missouri Alliance Of Boys & Girls C",
+    "city": "Sedalia",
+    "state": "MO",
+    "location": "Sedalia, MO",
+    "ntee_classification": "O23Z"
+  }
+]
