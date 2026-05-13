@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { and, desc, eq, inArray } from "drizzle-orm";
-import { Plus, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { db } from "@/db/client";
 import { events, nonprofitPartners } from "@/db/schema";
 import { getActiveWorkspaceOrThrow } from "@/lib/active-workspace";
@@ -38,16 +39,45 @@ const STATUS_LABEL: Record<string, string> = {
   draft: "Draft",
 };
 
+/**
+ * Corporate-only events list. Nonprofit viewers were previously served
+ * a "your events" surface here; the v2 build moves that to
+ * `/np/events` (richer past-events surface with retention + CSAT +
+ * flagged-event signals), so this page redirects nonprofit viewers.
+ */
 export default async function EventsPage() {
   const ws = await getActiveWorkspaceOrThrow();
+  if (ws.type === "nonprofit") redirect("/np/events");
+
+  // Corporate side: events activated through any of the workspace's
+  // partners, plus events from vetted partners that the corporate side
+  // hasn't yet activated.
+  const partners = await db
+    .select({
+      id: nonprofitPartners.id,
+      nonprofitWorkspaceId: nonprofitPartners.nonprofitWorkspaceId,
+      commonName: nonprofitPartners.commonName,
+      status: nonprofitPartners.status,
+    })
+    .from(nonprofitPartners)
+    .where(eq(nonprofitPartners.corporateWorkspaceId, ws.id));
+  const partnerIds = partners.map((p) => p.id).filter(Boolean);
+  const vettedWorkspaceIds = partners
+    .filter((p) => p.status === "vetted" && p.nonprofitWorkspaceId)
+    .map((p) => p.nonprofitWorkspaceId!) as string[];
 
   let rows: EventRow[] = [];
-  if (ws.type === "nonprofit") {
+  if (partnerIds.length || vettedWorkspaceIds.length) {
     const raw = await db
       .select()
       .from(events)
-      .where(eq(events.nonprofitWorkspaceId, ws.id))
+      .where(
+        // CROSS_WORKSPACE_READ: corporate reads nonprofit-owned events
+        // through the partner relationship.
+        partnerIds.length ? inArray(events.partnerId, partnerIds) : and(),
+      )
       .orderBy(desc(events.startsAt));
+    const partnerById = new Map(partners.map((p) => [p.id, p.commonName]));
     rows = raw.map((e) => ({
       id: e.id,
       title: e.title,
@@ -57,44 +87,8 @@ export default async function EventsPage() {
       format: e.format,
       status: e.status,
       location: e.location,
+      partnerName: e.partnerId ? partnerById.get(e.partnerId) : null,
     }));
-  } else {
-    // Corporate side: events activated through any of the workspace's partners,
-    // plus events from vetted partners that the corporate side hasn't yet activated.
-    const partners = await db
-      .select({ id: nonprofitPartners.id, nonprofitWorkspaceId: nonprofitPartners.nonprofitWorkspaceId, commonName: nonprofitPartners.commonName, status: nonprofitPartners.status })
-      .from(nonprofitPartners)
-      .where(eq(nonprofitPartners.corporateWorkspaceId, ws.id));
-    const partnerIds = partners.map((p) => p.id).filter(Boolean);
-    const vettedWorkspaceIds = partners
-      .filter((p) => p.status === "vetted" && p.nonprofitWorkspaceId)
-      .map((p) => p.nonprofitWorkspaceId!) as string[];
-
-    if (partnerIds.length || vettedWorkspaceIds.length) {
-      const raw = await db
-        .select()
-        .from(events)
-        .where(
-          // CROSS_WORKSPACE_READ: corporate reads nonprofit-owned events
-          // through the partner relationship.
-          partnerIds.length
-            ? inArray(events.partnerId, partnerIds)
-            : and(),
-        )
-        .orderBy(desc(events.startsAt));
-      const partnerById = new Map(partners.map((p) => [p.id, p.commonName]));
-      rows = raw.map((e) => ({
-        id: e.id,
-        title: e.title,
-        startsAt: e.startsAt,
-        capacity: e.capacity,
-        confirmedCapacity: e.confirmedCapacity,
-        format: e.format,
-        status: e.status,
-        location: e.location,
-        partnerName: e.partnerId ? partnerById.get(e.partnerId) : null,
-      }));
-    }
   }
 
   return (
@@ -103,39 +97,23 @@ export default async function EventsPage() {
         <div>
           <EyebrowLabel className="mb-1">EVENTS</EyebrowLabel>
           <h1 className="font-sans text-[20px] font-medium leading-[1.3] tracking-tight text-ink">
-            {ws.type === "nonprofit" ? "Your events" : "Activated events"}
+            Activated events
           </h1>
           <p className="mt-1 text-[14px] leading-[1.6] text-ink-subtle">
-            {ws.type === "nonprofit"
-              ? "Volunteer events you've published. AI-draft a new one from a single sentence."
-              : `${rows.length} event${rows.length === 1 ? "" : "s"} from your vetted partners — activated and in motion`}
+            {rows.length} event{rows.length === 1 ? "" : "s"} from your
+            vetted partners — activated and in motion
           </p>
         </div>
-        {ws.type === "nonprofit" && (
-          <Button asChild>
-            <Link href="/events/new">
-              <Plus className="mr-1 h-3.5 w-3.5" />
-              New event
-            </Link>
-          </Button>
-        )}
       </div>
 
       {rows.length === 0 ? (
         <div className="rounded-md border border-dashed border-hairline bg-mist px-6 py-8 text-center">
           <p className="text-[14px] text-ink-subtle">
-            {ws.type === "nonprofit" ? "No events yet." : "No activated events yet — start from Discover."}
+            No activated events yet — start from Discover.
           </p>
-          {ws.type === "nonprofit" && (
-            <Button asChild className="mt-3" size="sm">
-              <Link href="/events/new">+ Draft your first event</Link>
-            </Button>
-          )}
-          {ws.type === "corporate" && (
-            <Button asChild className="mt-3" size="sm" variant="outline">
-              <Link href="/discover">Open Discover</Link>
-            </Button>
-          )}
+          <Button asChild className="mt-3" size="sm" variant="outline">
+            <Link href="/discover">Open Discover</Link>
+          </Button>
         </div>
       ) : (
         <div className="overflow-hidden rounded-md border border-hairline bg-paper">
@@ -166,7 +144,10 @@ export default async function EventsPage() {
                   </span>
                 </div>
               </div>
-              <ArrowRight className="h-4 w-4 shrink-0 text-ink-faint" aria-hidden />
+              <ArrowRight
+                className="h-4 w-4 shrink-0 text-ink-faint"
+                aria-hidden
+              />
             </Link>
           ))}
         </div>
@@ -176,5 +157,9 @@ export default async function EventsPage() {
 }
 
 function formatDate(d: Date): string {
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }

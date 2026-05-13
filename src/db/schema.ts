@@ -234,6 +234,123 @@ export const snoozes = pgTable("snoozes", {
   createdAt: now(),
 });
 
+// ─────────────────────────────────────────────────────────────────────
+// Nonprofit-side v2 tables (feature/nonprofit-workspace-v2)
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Nonprofit-only fields layered on top of the shared event_signups records.
+ * Keyed on (nonprofit_workspace_id, employee_email) since the v0 schema
+ * keeps employees inline on signups rather than as a top-level table.
+ * One row per (nonprofit, volunteer) pair.
+ */
+export const nonprofitVolunteerOverlay = pgTable(
+  "nonprofit_volunteer_overlay",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    nonprofitWorkspaceId: uuid("nonprofit_workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    employeeEmail: text("employee_email").notNull(),
+    notes: text("notes"),
+    tags: jsonb("tags").$type<string[]>().notNull().default([]),
+    capacitySignal: text("capacity_signal"),
+    firstSeenAt: timestamp("first_seen_at", { withTimezone: true }).notNull(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull(),
+    createdAt: now(),
+    updatedAt: updated(),
+  },
+);
+
+/**
+ * Per-event statistics computed from event_signups for nonprofit
+ * dashboards. Re-computed on event completion + after the reconciliation
+ * queue settles. The Q1 Warehouse Sort fixture has the flagged "low CSAT
+ * + high no-show" pattern that anchors demo moment 7.
+ */
+export const nonprofitEventStats = pgTable("nonprofit_event_stats", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  eventId: uuid("event_id")
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+  nonprofitWorkspaceId: uuid("nonprofit_workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  signupCount: integer("signup_count").notNull().default(0),
+  checkedInCount: integer("checked_in_count").notNull().default(0),
+  noShowCount: integer("no_show_count").notNull().default(0),
+  totalHours: integer("total_hours").notNull().default(0),
+  satisfactionAvg: numeric("satisfaction_avg", { precision: 3, scale: 2 }),
+  satisfactionResponseRate: numeric("satisfaction_response_rate", {
+    precision: 4,
+    scale: 3,
+  }),
+  retentionFollowupCount: integer("retention_followup_count")
+    .notNull()
+    .default(0),
+  /** Claude-generated no-show analysis paragraph. */
+  noShowAnalysisMd: text("no_show_analysis_md"),
+  computedAt: timestamp("computed_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
+ * Nonprofit-side quarterly impact recap. Distinct from the corp-side
+ * `recaps` table because the structure is different (gratitude-led,
+ * per-partner-contributions, "ask for next quarter") and the audit
+ * trail wants them on different rails.
+ */
+export const nonprofitRecaps = pgTable("nonprofit_recaps", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  nonprofitWorkspaceId: uuid("nonprofit_workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  /** Display period, e.g. "Q3 2026" */
+  period: text("period").notNull(),
+  status: text("status").notNull().default("drafting"),
+  openingPara: text("opening_para"),
+  /**
+   * Per-partner contribution paragraphs. Stored snake_case to match the
+   * shape the LLM emits and the marketing-artifact prompts consume.
+   * Field-level fix: avoid translating between cases on every read.
+   */
+  partnerContributions: jsonb("partner_contributions").$type<
+    {
+      partner_workspace_id: string;
+      partner_name: string;
+      paragraph: string;
+      named_volunteers: string[];
+    }[]
+  >().default([]),
+  whatWorked: text("what_worked"),
+  whatDrifted: text("what_drifted"),
+  askForNextQuarter: text("ask_for_next_quarter"),
+  approvedBy: uuid("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
+  createdAt: now(),
+  updatedAt: updated(),
+});
+
+/**
+ * Marketing artifacts derived from a nonprofit recap. Voice is
+ * gratitude/mission, not engagement-metric. Four kinds per recap:
+ *   donor_newsletter | grant_snippet | board_update | social_thanks
+ */
+export const nonprofitArtifacts = pgTable("nonprofit_artifacts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  recapId: uuid("recap_id")
+    .notNull()
+    .references(() => nonprofitRecaps.id, { onDelete: "cascade" }),
+  kind: text("kind").notNull(),
+  status: text("status").notNull().default("drafting"),
+  body: text("body").notNull(),
+  bodyOriginal: text("body_original"),
+  approvedBy: uuid("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
+  createdAt: now(),
+});
+
 export const auditLog = pgTable("audit_log", {
   id: uuid("id").defaultRandom().primaryKey(),
   workspaceId: uuid("workspace_id")
@@ -261,4 +378,9 @@ export type Donation = typeof donations.$inferSelect;
 export type Recap = typeof recaps.$inferSelect;
 export type MarketingArtifact = typeof marketingArtifacts.$inferSelect;
 export type Snooze = typeof snoozes.$inferSelect;
+export type NonprofitVolunteerOverlay =
+  typeof nonprofitVolunteerOverlay.$inferSelect;
+export type NonprofitEventStats = typeof nonprofitEventStats.$inferSelect;
+export type NonprofitRecap = typeof nonprofitRecaps.$inferSelect;
+export type NonprofitArtifact = typeof nonprofitArtifacts.$inferSelect;
 export type AuditLogEntry = typeof auditLog.$inferSelect;

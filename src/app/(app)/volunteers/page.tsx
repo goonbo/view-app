@@ -1,11 +1,13 @@
-import { Placeholder } from "@/components/shared/Placeholder";
+import { redirect } from "next/navigation";
+import { getActiveWorkspaceOrThrow } from "@/lib/active-workspace";
 
-export default function VolunteersPage() {
-  return (
-    <Placeholder
-      phase="Phase 3"
-      title="Volunteers"
-      description="Roster of volunteers across your events. Hours logged, no-shows, repeat attendees."
-    />
-  );
+/**
+ * Legacy /volunteers placeholder. The v2 build ships the real volunteer
+ * CRM at `/np/volunteers` for nonprofit viewers; corporate viewers don't
+ * have a volunteers surface yet, so they bounce home.
+ */
+export default async function VolunteersRedirectPage() {
+  const ws = await getActiveWorkspaceOrThrow();
+  if (ws.type === "nonprofit") redirect("/np/volunteers");
+  redirect("/workbench");
 }

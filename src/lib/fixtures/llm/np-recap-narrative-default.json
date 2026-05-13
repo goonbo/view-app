@@ -1,0 +1,777 @@
+{
+  "totalDurationMs": 18679,
+  "chunks": [
+    {
+      "delta": "A",
+      "delayMs": 469
+    },
+    {
+      "delta": " note",
+      "delayMs": 87
+    },
+    {
+      "delta": " from Habitat",
+      "delayMs": 101
+    },
+    {
+      "delta": " for",
+      "delayMs": 61
+    },
+    {
+      "delta": " Humanity",
+      "delayMs": 71
+    },
+    {
+      "delta": " GSF.\n\nHabitat for",
+      "delayMs": 88
+    },
+    {
+      "delta": " Humanity Greater",
+      "delayMs": 55
+    },
+    {
+      "delta": " SF",
+      "delayMs": 51
+    },
+    {
+      "delta": " closed",
+      "delayMs": 67
+    },
+    {
+      "delta": " Q3",
+      "delayMs": 103
+    },
+    {
+      "delta": " with 1,124",
+      "delayMs": 109
+    },
+    {
+      "delta": " volunteer hours",
+      "delayMs": 76
+    },
+    {
+      "delta": " from three corporate",
+      "delayMs": 67
+    },
+    {
+      "delta": " partners —",
+      "delayMs": 75
+    },
+    {
+      "delta": " Acme",
+      "delayMs": 71
+    },
+    {
+      "delta": " Robotics,",
+      "delayMs": 65
+    },
+    {
+      "delta": " Lumen Industries,",
+      "delayMs": 97
+    },
+    {
+      "delta": " and",
+      "delayMs": 92
+    },
+    {
+      "delta": " Boldfish",
+      "delayMs": 75
+    },
+    {
+      "delta": " Co.",
+      "delayMs": 336
+    },
+    {
+      "delta": " Forty-seven people",
+      "delayMs": 80
+    },
+    {
+      "delta": " built",
+      "delayMs": 66
+    },
+    {
+      "delta": " homes, sorted",
+      "delayMs": 51
+    },
+    {
+      "delta": " warehouses, and",
+      "delayMs": 91
+    },
+    {
+      "delta": " stocked",
+      "delayMs": 84
+    },
+    {
+      "delta": " pantries",
+      "delayMs": 53
+    },
+    {
+      "delta": " together. These hours",
+      "delayMs": 101
+    },
+    {
+      "delta": " funded",
+      "delayMs": 95
+    },
+    {
+      "delta": " the equivalent of",
+      "delayMs": 70
+    },
+    {
+      "delta": " 1.4 family",
+      "delayMs": 63
+    },
+    {
+      "delta": " home builds. We",
+      "delayMs": 57
+    },
+    {
+      "delta": " are",
+      "delayMs": 74
+    },
+    {
+      "delta": " closer to opening",
+      "delayMs": 96
+    },
+    {
+      "delta": " the East",
+      "delayMs": 70
+    },
+    {
+      "delta": " Side",
+      "delayMs": 96
+    },
+    {
+      "delta": " site because",
+      "delayMs": 105
+    },
+    {
+      "delta": " of",
+      "delayMs": 87
+    },
+    {
+      "delta": " this —",
+      "delayMs": 88
+    },
+    {
+      "delta": " and that is",
+      "delayMs": 95
+    },
+    {
+      "delta": " the thing",
+      "delayMs": 102
+    },
+    {
+      "delta": " we want",
+      "delayMs": 70
+    },
+    {
+      "delta": " to hold",
+      "delayMs": 105
+    },
+    {
+      "delta": " up",
+      "delayMs": 97
+    },
+    {
+      "delta": " to",
+      "delayMs": 70
+    },
+    {
+      "delta": " the",
+      "delayMs": 56
+    },
+    {
+      "delta": " light",
+      "delayMs": 109
+    },
+    {
+      "delta": " first.\n\nWhat worked.",
+      "delayMs": 254
+    },
+    {
+      "delta": "\n\nThe most",
+      "delayMs": 99
+    },
+    {
+      "delta": " operational",
+      "delayMs": 78
+    },
+    {
+      "delta": " win",
+      "delayMs": 70
+    },
+    {
+      "delta": " was",
+      "delayMs": 92
+    },
+    {
+      "delta": " the",
+      "delayMs": 91
+    },
+    {
+      "delta": " cross-partner",
+      "delayMs": 107
+    },
+    {
+      "delta": " build",
+      "delayMs": 81
+    },
+    {
+      "delta": " day",
+      "delayMs": 81
+    },
+    {
+      "delta": " in",
+      "delayMs": 70
+    },
+    {
+      "delta": " February.",
+      "delayMs": 199
+    },
+    {
+      "delta": " Sixteen volunteers came",
+      "delayMs": 84
+    },
+    {
+      "delta": " from",
+      "delayMs": 51
+    },
+    {
+      "delta": " Acme",
+      "delayMs": 87
+    },
+    {
+      "delta": " and",
+      "delayMs": 102
+    },
+    {
+      "delta": " Lumen",
+      "delayMs": 101
+    },
+    {
+      "delta": " together",
+      "delayMs": 76
+    },
+    {
+      "delta": " —",
+      "delayMs": 98
+    },
+    {
+      "delta": " different",
+      "delayMs": 63
+    },
+    {
+      "delta": " employers",
+      "delayMs": 52
+    },
+    {
+      "delta": " in",
+      "delayMs": 107
+    },
+    {
+      "delta": " the same",
+      "delayMs": 73
+    },
+    {
+      "delta": " crew,",
+      "delayMs": 104
+    },
+    {
+      "delta": " different skill",
+      "delayMs": 93
+    },
+    {
+      "delta": " mixes",
+      "delayMs": 64
+    },
+    {
+      "delta": " that",
+      "delayMs": 82
+    },
+    {
+      "delta": " complemented each other.",
+      "delayMs": 369
+    },
+    {
+      "delta": " Maya Chen",
+      "delayMs": 85
+    },
+    {
+      "delta": " and",
+      "delayMs": 106
+    },
+    {
+      "delta": " Carla",
+      "delayMs": 58
+    },
+    {
+      "delta": " Mendes",
+      "delayMs": 72
+    },
+    {
+      "delta": " co-ran the",
+      "delayMs": 77
+    },
+    {
+      "delta": " kitchen side.",
+      "delayMs": 326
+    },
+    {
+      "delta": " Nobody",
+      "delayMs": 51
+    },
+    {
+      "delta": " noticed the",
+      "delayMs": 53
+    },
+    {
+      "delta": " seam.\n\nHumanly:",
+      "delayMs": 100
+    },
+    {
+      "delta": " the",
+      "delayMs": 97
+    },
+    {
+      "delta": " family-friendly",
+      "delayMs": 86
+    },
+    {
+      "delta": " build in",
+      "delayMs": 80
+    },
+    {
+      "delta": " March. We've never",
+      "delayMs": 71
+    },
+    {
+      "delta": " run",
+      "delayMs": 63
+    },
+    {
+      "delta": " one",
+      "delayMs": 50
+    },
+    {
+      "delta": " before; Boldfish",
+      "delayMs": 52
+    },
+    {
+      "delta": " suggested it.",
+      "delayMs": 310
+    },
+    {
+      "delta": " Ten",
+      "delayMs": 79
+    },
+    {
+      "delta": " adults, six",
+      "delayMs": 84
+    },
+    {
+      "delta": " kids,",
+      "delayMs": 54
+    },
+    {
+      "delta": " three",
+      "delayMs": 95
+    },
+    {
+      "delta": " hours,",
+      "delayMs": 62
+    },
+    {
+      "delta": " lower-stakes tasks.",
+      "delayMs": 200
+    },
+    {
+      "delta": " The",
+      "delayMs": 95
+    },
+    {
+      "delta": " kids",
+      "delayMs": 109
+    },
+    {
+      "delta": " asked when",
+      "delayMs": 50
+    },
+    {
+      "delta": " we",
+      "delayMs": 75
+    },
+    {
+      "delta": " were coming back.",
+      "delayMs": 279
+    },
+    {
+      "delta": " That's",
+      "delayMs": 66
+    },
+    {
+      "delta": " the",
+      "delayMs": 95
+    },
+    {
+      "delta": " quote",
+      "delayMs": 98
+    },
+    {
+      "delta": " we kept.",
+      "delayMs": 204
+    },
+    {
+      "delta": "\n\nWhat",
+      "delayMs": 89
+    },
+    {
+      "delta": " drifted.",
+      "delayMs": 312
+    },
+    {
+      "delta": "\n\nQ1 Warehouse Sort",
+      "delayMs": 88
+    },
+    {
+      "delta": " underperformed. Forty-two signed",
+      "delayMs": 82
+    },
+    {
+      "delta": " up, 24 checked",
+      "delayMs": 71
+    },
+    {
+      "delta": " in, 18 no-shows",
+      "delayMs": 101
+    },
+    {
+      "delta": " —",
+      "delayMs": 90
+    },
+    {
+      "delta": " eleven",
+      "delayMs": 50
+    },
+    {
+      "delta": " of those",
+      "delayMs": 76
+    },
+    {
+      "delta": " eighteen were from",
+      "delayMs": 75
+    },
+    {
+      "delta": " Acme",
+      "delayMs": 67
+    },
+    {
+      "delta": " Engineering,",
+      "delayMs": 93
+    },
+    {
+      "delta": " who'd",
+      "delayMs": 55
+    },
+    {
+      "delta": " booked",
+      "delayMs": 68
+    },
+    {
+      "delta": " a",
+      "delayMs": 106
+    },
+    {
+      "delta": " team",
+      "delayMs": 88
+    },
+    {
+      "delta": " offsite on",
+      "delayMs": 74
+    },
+    {
+      "delta": " the",
+      "delayMs": 107
+    },
+    {
+      "delta": " same",
+      "delayMs": 58
+    },
+    {
+      "delta": " day.",
+      "delayMs": 257
+    },
+    {
+      "delta": " We didn't",
+      "delayMs": 67
+    },
+    {
+      "delta": " catch it",
+      "delayMs": 103
+    },
+    {
+      "delta": " in",
+      "delayMs": 58
+    },
+    {
+      "delta": " advance.",
+      "delayMs": 181
+    },
+    {
+      "delta": " The",
+      "delayMs": 59
+    },
+    {
+      "delta": " fix",
+      "delayMs": 97
+    },
+    {
+      "delta": " is calendar-side:",
+      "delayMs": 50
+    },
+    {
+      "delta": " we'll ask",
+      "delayMs": 77
+    },
+    {
+      "delta": " Acme's",
+      "delayMs": 100
+    },
+    {
+      "delta": " People Ops",
+      "delayMs": 72
+    },
+    {
+      "delta": " to",
+      "delayMs": 65
+    },
+    {
+      "delta": " share their offsite",
+      "delayMs": 98
+    },
+    {
+      "delta": " schedule with",
+      "delayMs": 83
+    },
+    {
+      "delta": " us",
+      "delayMs": 74
+    },
+    {
+      "delta": " a quarter",
+      "delayMs": 98
+    },
+    {
+      "delta": " out. It's",
+      "delayMs": 64
+    },
+    {
+      "delta": " a fixable",
+      "delayMs": 99
+    },
+    {
+      "delta": " problem; we want",
+      "delayMs": 72
+    },
+    {
+      "delta": " to",
+      "delayMs": 51
+    },
+    {
+      "delta": " flag",
+      "delayMs": 71
+    },
+    {
+      "delta": " it",
+      "delayMs": 78
+    },
+    {
+      "delta": " rather",
+      "delayMs": 92
+    },
+    {
+      "delta": " than",
+      "delayMs": 58
+    },
+    {
+      "delta": " rationalize it.",
+      "delayMs": 342
+    },
+    {
+      "delta": "\n\nThe ask for",
+      "delayMs": 92
+    },
+    {
+      "delta": " next",
+      "delayMs": 104
+    },
+    {
+      "delta": " quarter.",
+      "delayMs": 206
+    },
+    {
+      "delta": "\n\nFor Q4,",
+      "delayMs": 54
+    },
+    {
+      "delta": " we need:",
+      "delayMs": 106
+    },
+    {
+      "delta": " ten Spanish-speaking",
+      "delayMs": 75
+    },
+    {
+      "delta": " volunteers for",
+      "delayMs": 95
+    },
+    {
+      "delta": " the East",
+      "delayMs": 96
+    },
+    {
+      "delta": " Side",
+      "delayMs": 103
+    },
+    {
+      "delta": " family welcome",
+      "delayMs": 77
+    },
+    {
+      "delta": " on October 15",
+      "delayMs": 84
+    },
+    {
+      "delta": " (Priya",
+      "delayMs": 69
+    },
+    {
+      "delta": " Subbu has",
+      "delayMs": 70
+    },
+    {
+      "delta": " offered to",
+      "delayMs": 69
+    },
+    {
+      "delta": " coordinate); a forklift-certified",
+      "delayMs": 98
+    },
+    {
+      "delta": " crew",
+      "delayMs": 50
+    },
+    {
+      "delta": " of",
+      "delayMs": 105
+    },
+    {
+      "delta": " six",
+      "delayMs": 91
+    },
+    {
+      "delta": " for the December",
+      "delayMs": 57
+    },
+    {
+      "delta": " warehouse turnover;",
+      "delayMs": 62
+    },
+    {
+      "delta": " and",
+      "delayMs": 92
+    },
+    {
+      "delta": " one",
+      "delayMs": 65
+    },
+    {
+      "delta": " corporate",
+      "delayMs": 82
+    },
+    {
+      "delta": " partner willing to",
+      "delayMs": 66
+    },
+    {
+      "delta": " sponsor",
+      "delayMs": 88
+    },
+    {
+      "delta": " the",
+      "delayMs": 81
+    },
+    {
+      "delta": " kids'",
+      "delayMs": 103
+    },
+    {
+      "delta": " summer",
+      "delayMs": 79
+    },
+    {
+      "delta": " program kickoff in",
+      "delayMs": 101
+    },
+    {
+      "delta": " November. The kickoff",
+      "delayMs": 77
+    },
+    {
+      "delta": " is",
+      "delayMs": 70
+    },
+    {
+      "delta": " our highest-leverage event",
+      "delayMs": 60
+    },
+    {
+      "delta": " of",
+      "delayMs": 75
+    },
+    {
+      "delta": " the year",
+      "delayMs": 55
+    },
+    {
+      "delta": " — last year's",
+      "delayMs": 56
+    },
+    {
+      "delta": " underwriter",
+      "delayMs": 64
+    },
+    {
+      "delta": " has",
+      "delayMs": 100
+    },
+    {
+      "delta": " moved",
+      "delayMs": 73
+    },
+    {
+      "delta": " on, and we'd",
+      "delayMs": 57
+    },
+    {
+      "delta": " love",
+      "delayMs": 109
+    },
+    {
+      "delta": " to",
+      "delayMs": 84
+    },
+    {
+      "delta": " find the next",
+      "delayMs": 78
+    },
+    {
+      "delta": " one",
+      "delayMs": 75
+    },
+    {
+      "delta": " before October ends.",
+      "delayMs": 353
+    }
+  ]
+}
