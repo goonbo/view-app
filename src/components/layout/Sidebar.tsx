@@ -10,10 +10,9 @@ import {
   HandCoins,
   Megaphone,
   FileBarChart,
-  Home,
   Calendar,
   UserRound,
-  Building2,
+  HeartHandshake,
   Settings,
   HelpCircle,
   PanelLeftClose,
@@ -45,6 +44,8 @@ type NavItem = {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badgeCount?: number;
+  /** When set, the item is rendered as disabled with a tooltip on hover. */
+  comingSoon?: string;
 };
 
 const CORPORATE_NAV: NavItem[] = [
@@ -57,11 +58,16 @@ const CORPORATE_NAV: NavItem[] = [
 ];
 
 const NONPROFIT_NAV: NavItem[] = [
-  { label: "Home", href: "/home", icon: Home },
-  { label: "Events", href: "/events", icon: Calendar },
-  { label: "Campaigns", href: "/campaigns", icon: Megaphone },
-  { label: "Volunteers", href: "/volunteers", icon: UserRound },
-  { label: "Partners", href: "/partners", icon: Building2 },
+  { label: "Workbench", href: "/np/workbench", icon: LayoutGrid },
+  { label: "Volunteers", href: "/np/volunteers", icon: UserRound },
+  { label: "Events", href: "/np/events", icon: Calendar },
+  {
+    label: "Donors",
+    href: "/np/donors",
+    icon: HeartHandshake,
+    comingSoon: "Coming Q2 2027",
+  },
+  { label: "Recaps", href: "/np/recaps", icon: FileBarChart },
 ];
 
 type AppSidebarProps = {
@@ -118,11 +124,34 @@ export function AppSidebar({
         <SidebarMenu className="gap-px">
           {items.map((item) => {
             const isActive =
-              pathname === item.href ||
-              (item.href !== "/" && pathname.startsWith(item.href + "/"));
+              !item.comingSoon &&
+              (pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(item.href + "/")));
             const Icon = item.icon;
 
-            const buttonInner = (
+            // Coming-soon items get a non-link button rendered in faint
+            // text; the tooltip carries the launch date.
+            const disabled = Boolean(item.comingSoon);
+
+            const buttonInner = disabled ? (
+              <SidebarMenuButton
+                aria-disabled="true"
+                className={cn(
+                  "h-8 gap-2 rounded-md px-2 py-1.5 text-[14px] font-normal",
+                  "cursor-default text-ink-faint hover:bg-transparent hover:text-ink-faint",
+                )}
+              >
+                <Icon className="h-4 w-4 shrink-0 text-ink-faint" />
+                {!collapsed && (
+                  <span className="truncate">{item.label}</span>
+                )}
+                {!collapsed && (
+                  <span className="ml-auto font-mono text-[9px] uppercase tracking-wider text-ink-faint">
+                    Soon
+                  </span>
+                )}
+              </SidebarMenuButton>
+            ) : (
               <SidebarMenuButton
                 asChild
                 isActive={isActive}
@@ -140,7 +169,9 @@ export function AppSidebar({
                       isActive ? "text-accent" : "text-ink-subtle",
                     )}
                   />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
+                  {!collapsed && (
+                    <span className="truncate">{item.label}</span>
+                  )}
                   {isActive && (
                     <span
                       aria-hidden
@@ -151,13 +182,22 @@ export function AppSidebar({
               </SidebarMenuButton>
             );
 
+            // Show a tooltip when collapsed (label) OR when the item is a
+            // coming-soon stub (launch date).
+            const shouldTooltip = collapsed || disabled;
+
             return (
               <SidebarMenuItem key={item.href} className="relative">
-                {collapsed ? (
+                {shouldTooltip ? (
                   <Tooltip>
                     <TooltipTrigger asChild>{buttonInner}</TooltipTrigger>
-                    <TooltipContent side="right" className="flex items-center gap-2">
-                      <span>{item.label}</span>
+                    <TooltipContent
+                      side="right"
+                      className="flex items-center gap-2"
+                    >
+                      <span>
+                        {disabled ? `${item.label} · ${item.comingSoon}` : item.label}
+                      </span>
                       {item.badgeCount && item.badgeCount > 0 && (
                         <span className="rounded-full bg-mist px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle">
                           {item.badgeCount}

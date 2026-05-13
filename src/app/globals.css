@@ -24,6 +24,13 @@
   --color-accent-cyan: #0e7490;
   --color-accent-green: #15803d;
 
+  /* Corporate-partner attribution colors (used on the nonprofit-side
+     CRM where multi-partner provenance matters). Each corporate
+     workspace gets a stable color across all surfaces. */
+  --color-partner-acme: #0e7490; /* cyan-700 — matches the operator register */
+  --color-partner-lumen: #b45309; /* amber-700 */
+  --color-partner-boldfish: #5f7a6a; /* sage */
+
   /* Per-layout accent — read from --accent CSS variable */
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);

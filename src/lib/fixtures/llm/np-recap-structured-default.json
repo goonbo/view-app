@@ -1,0 +1,38 @@
+{
+  "partner_contributions": [
+    {
+      "partner_workspace_id": "61636d65-0000-4000-8000-000000000c40",
+      "partner_name": "Acme Robotics",
+      "paragraph": "From Acme, Maya Chen led on the build days and back at the warehouse — 38 hours across seven events, and the kind of attendance that makes a Saturday crew predictable. Hannah Lee was at every quarterly sort with her own gloves. Janelle Ortiz and Reza Naderi joined as first-time interns and were running the produce table within thirty minutes; we asked them back. Across Acme's group, 24 volunteers contributed 686 hours, roughly the equivalent of one family home's framing week.",
+      "named_volunteers": [
+        "Maya Chen",
+        "Hannah Lee",
+        "Janelle Ortiz",
+        "Reza Naderi"
+      ]
+    },
+    {
+      "partner_workspace_id": "6c756d65-0000-4000-8000-000000000c40",
+      "partner_name": "Lumen Industries",
+      "paragraph": "From Lumen, Priya Subbu interpreted in Spanish at every Build Day she attended this quarter, which mattered more than the hours count alone — three of our incoming families speak Spanish at home, and the Build Day she ran in February was the first time a build crew met them in their language. Carla Mendes brought her kitchen-trained crew to the Holiday Volunteer Drive. Yusuf Al-Hassan ran a forklift through two warehouse sorts. Lumen contributed 286 hours.",
+      "named_volunteers": [
+        "Priya Subbu",
+        "Carla Mendes",
+        "Yusuf Al-Hassan"
+      ]
+    },
+    {
+      "partner_workspace_id": "626f6c64-0000-4000-8000-000000000c40",
+      "partner_name": "Boldfish Co.",
+      "paragraph": "Boldfish came in late and small — Jamie Okafor signed up the team in October and they led their first MLK Day Service event in January. Devon Rhodes has been to two builds. Yara Hadid joined for the family-friendly build in March and brought her kids; it was the first multi-generational build crew we've hosted. Boldfish contributed 152 hours, all in the second half of the quarter, and we expect them to scale up in Q4.",
+      "named_volunteers": [
+        "Jamie Okafor",
+        "Devon Rhodes",
+        "Yara Hadid"
+      ]
+    }
+  ],
+  "what_worked": "The most operational win was the cross-partner build day in February. Sixteen volunteers came from Acme and Lumen together — different employers in the same crew, different skill mixes that complemented each other. Maya Chen and Carla Mendes co-ran the kitchen side. Nobody noticed the seam.\n\nHumanly: the family-friendly build in March. We've never run one before; Boldfish suggested it. Ten adults, six kids, three hours, lower-stakes tasks. The kids asked when we were coming back. That's the quote we kept.",
+  "what_drifted": "Q1 Warehouse Sort underperformed. Forty-two signed up, 24 checked in, 18 no-shows — eleven of those eighteen were from Acme Engineering, who'd booked a team offsite on the same day. We didn't catch it in advance. The fix is calendar-side: we'll ask Acme's People Ops to share their offsite schedule with us a quarter out. It's a fixable problem; we want to flag it rather than rationalize it.",
+  "ask_for_next_quarter": "For Q4, we need: ten Spanish-speaking volunteers for the East Side family welcome on October 15 (Priya Subbu has offered to coordinate); a forklift-certified crew of six for the December warehouse turnover; and one corporate partner willing to sponsor the kids' summer program kickoff in November. The kickoff is our highest-leverage event of the year — last year's underwriter has moved on, and we'd love to find the next one before October ends."
+}

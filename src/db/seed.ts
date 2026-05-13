@@ -26,7 +26,11 @@ import {
   events,
   marketingArtifacts,
   matchPolicies,
+  nonprofitArtifacts,
+  nonprofitEventStats,
   nonprofitPartners,
+  nonprofitRecaps,
+  nonprofitVolunteerOverlay,
   recaps,
   snoozes,
   users,
@@ -39,11 +43,19 @@ const USER_IDS = {
   marcus: "00000001-0000-4000-8000-000000000002",
   maria: "00000001-0000-4000-8000-000000000003",
   david: "00000001-0000-4000-8000-000000000004",
+  lina: "00000001-0000-4000-8000-000000000005",
+  priya: "00000001-0000-4000-8000-000000000006",
+  jamie: "00000001-0000-4000-8000-000000000007",
 } as const;
 
 const PARTNER_IDS = {
   gafb: "00000002-0000-4000-8000-000000000001",
   bgca: "00000002-0000-4000-8000-000000000002",
+  // Habitat as a vetted partner of each of the three corps. The same
+  // nonprofit_workspace_id (Habitat) joins all three rows.
+  habitatAcme: "00000002-0000-4000-8000-000000000010",
+  habitatLumen: "00000002-0000-4000-8000-000000000011",
+  habitatBoldfish: "00000002-0000-4000-8000-000000000012",
 } as const;
 
 const DILIGENCE_IDS = {
@@ -164,6 +176,10 @@ function buildSignalsFromCapture(org: CapturedOrg): Record<string, unknown> {
 async function clear() {
   await db.delete(auditLog);
   await db.delete(snoozes);
+  await db.delete(nonprofitArtifacts);
+  await db.delete(nonprofitRecaps);
+  await db.delete(nonprofitEventStats);
+  await db.delete(nonprofitVolunteerOverlay);
   await db.delete(marketingArtifacts);
   await db.delete(recaps);
   await db.delete(donations);
@@ -189,6 +205,22 @@ async function insertWorkspaces() {
       causeAreas: ["education", "food security", "workforce development"],
     },
     {
+      id: WORKSPACE_IDS.lumen,
+      name: "Lumen Industries",
+      type: "corporate",
+      accent: "cyan",
+      size: 120,
+      causeAreas: ["housing", "education"],
+    },
+    {
+      id: WORKSPACE_IDS.boldfish,
+      name: "Boldfish Co.",
+      type: "corporate",
+      accent: "cyan",
+      size: 80,
+      causeAreas: ["housing", "community"],
+    },
+    {
       id: WORKSPACE_IDS.gafb,
       name: "Central Texas Food Bank",
       type: "nonprofit",
@@ -203,6 +235,14 @@ async function insertWorkspaces() {
       accent: "green",
       ein: "746087356",
       causeAreas: ["education", "youth"],
+    },
+    {
+      id: WORKSPACE_IDS.hgsf,
+      name: "Habitat for Humanity Greater SF",
+      type: "nonprofit",
+      accent: "green",
+      ein: "943088881",
+      causeAreas: ["housing", "community"],
     },
   ]);
 }
@@ -237,10 +277,57 @@ async function insertUsers() {
       role: "Programs Manager",
       email: "david@bgca.example",
     },
+    {
+      id: USER_IDS.lina,
+      workspaceId: WORKSPACE_IDS.hgsf,
+      name: "Lina Tran",
+      role: "Volunteer & Partnerships Lead",
+      email: "lina@habitatgsf.example",
+    },
+    {
+      id: USER_IDS.priya,
+      workspaceId: WORKSPACE_IDS.lumen,
+      name: "Priya Subbu",
+      role: "Community Impact Lead",
+      email: "priya@lumen.example",
+    },
+    {
+      id: USER_IDS.jamie,
+      workspaceId: WORKSPACE_IDS.boldfish,
+      name: "Jamie Okafor",
+      role: "People Operations",
+      email: "jamie@boldfish.example",
+    },
   ]);
 }
 
 async function insertPartners() {
+  const habitatCommon: Pick<
+    typeof nonprofitPartners.$inferInsert,
+    | "ein"
+    | "nonprofitWorkspaceId"
+    | "legalName"
+    | "commonName"
+    | "mission"
+    | "location"
+    | "website"
+    | "causeAreas"
+    | "status"
+    | "matchEligible"
+  > = {
+    ein: "943088881",
+    nonprofitWorkspaceId: WORKSPACE_IDS.hgsf,
+    legalName: "Habitat For Humanity Greater San Francisco",
+    commonName: "Habitat for Humanity Greater SF",
+    mission:
+      "Building homes, communities, and hope across the Greater Bay Area.",
+    location: "San Francisco, CA",
+    website: "https://www.habitatgsf.org",
+    causeAreas: ["housing", "community"],
+    status: "vetted",
+    matchEligible: true,
+  };
+
   await db.insert(nonprofitPartners).values([
     {
       id: PARTNER_IDS.gafb,
@@ -271,6 +358,23 @@ async function insertPartners() {
       causeAreas: ["education", "youth"],
       status: "in_diligence",
       matchEligible: false,
+    },
+    // Habitat as a vetted partner of all three corp workspaces. Same
+    // nonprofit_workspace_id, three different corp-side relationship rows.
+    {
+      id: PARTNER_IDS.habitatAcme,
+      corporateWorkspaceId: WORKSPACE_IDS.acme,
+      ...habitatCommon,
+    },
+    {
+      id: PARTNER_IDS.habitatLumen,
+      corporateWorkspaceId: WORKSPACE_IDS.lumen,
+      ...habitatCommon,
+    },
+    {
+      id: PARTNER_IDS.habitatBoldfish,
+      corporateWorkspaceId: WORKSPACE_IDS.boldfish,
+      ...habitatCommon,
     },
   ]);
 }
@@ -627,6 +731,233 @@ async function insertAuditTrail() {
   ]);
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// Habitat v2: nonprofit-side CRM seed (volunteers + events + overlay)
+// ─────────────────────────────────────────────────────────────────────
+
+type VolunteerSeed = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  corpWorkspaceId: string;
+  corpName: string;
+  tags: string[];
+  notes?: string;
+  capacitySignal?: "weekends-only" | "flexible" | "limited";
+  frequency: "regular" | "occasional" | "first-or-second";
+};
+
+type EventSeed = {
+  id: string;
+  title: string;
+  description: string;
+  location: string;
+  corpWorkspaceId: string;
+  corpPartnerId: string;
+  daysAgo: number;
+  hours: number;
+  /** Expected check-in count; signups = checkedIn + noShows. */
+  checkedIn: number;
+  noShows: number;
+  satisfactionAvg: number; // 1-5
+  satisfactionResponseRate: number; // 0-1
+  noShowAnalysis?: string;
+};
+
+const VOLUNTEERS: VolunteerSeed[] = [
+  // ─── Acme (24 — many regulars) ───────────────────────────────────
+  { firstName: "Maya", lastName: "Chen", email: "maya.chen@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["forklift-certified", "team-lead", "saturday-availability"], notes: "Strong leader in build days. Asked about leading a build day in Q4.\nLina · 6 weeks ago", frequency: "regular" },
+  { firstName: "David", lastName: "Park", email: "david.park@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["saturday-availability"], frequency: "occasional" },
+  { firstName: "Hannah", lastName: "Lee", email: "hannah.lee@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["forklift-certified", "saturday-availability"], notes: "Regular at every quarterly sort. Brings her own gloves.", frequency: "regular" },
+  { firstName: "Janelle", lastName: "Ortiz", email: "janelle.ortiz@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], notes: "Engineering intern. Picked up produce-table workflow in 30 minutes.", frequency: "occasional" },
+  { firstName: "Reza", lastName: "Naderi", email: "reza.naderi@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time", "bilingual"], notes: "Janelle's intern partner. Strong with logistics.", frequency: "occasional" },
+  { firstName: "Aisha", lastName: "Khan", email: "aisha.khan@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["large-group-coordinator", "team-lead"], frequency: "regular" },
+  { firstName: "Tomas", lastName: "Vega", email: "tomas.vega@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["bilingual"], frequency: "occasional" },
+  { firstName: "Olivia", lastName: "Brennan", email: "olivia.brennan@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["saturday-availability"], frequency: "occasional" },
+  { firstName: "Kira", lastName: "Watanabe", email: "kira.watanabe@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["weekend-only"], frequency: "occasional" },
+  { firstName: "Marcus", lastName: "Bell", email: "marcus.bell@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["team-lead", "forklift-certified"], frequency: "regular" },
+  { firstName: "Nia", lastName: "Williams", email: "nia.williams@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Liam", lastName: "Donovan", email: "liam.donovan@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Sarah", lastName: "Park", email: "sarah.park@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["kitchen-trained"], frequency: "occasional" },
+  { firstName: "Tyler", lastName: "Morrison", email: "tyler.morrison@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Emma", lastName: "Schultz", email: "emma.schultz@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Bilal", lastName: "Yusuf", email: "bilal.yusuf@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Sienna", lastName: "Diaz", email: "sienna.diaz@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Eli", lastName: "Goodman", email: "eli.goodman@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Tara", lastName: "Ito", email: "tara.ito@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Henry", lastName: "Ross", email: "henry.ross@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: [], frequency: "first-or-second" },
+  { firstName: "Audrey", lastName: "King", email: "audrey.king@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: [], frequency: "first-or-second" },
+  { firstName: "Mateo", lastName: "Cruz", email: "mateo.cruz@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: ["bilingual"], frequency: "first-or-second" },
+  { firstName: "Vivian", lastName: "Lin", email: "vivian.lin@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: [], frequency: "first-or-second" },
+  { firstName: "Diego", lastName: "Patel", email: "diego.patel@acme.example", corpWorkspaceId: WORKSPACE_IDS.acme, corpName: "Acme Robotics", tags: [], frequency: "first-or-second" },
+
+  // ─── Lumen (14) ─────────────────────────────────────────────────
+  { firstName: "Priya", lastName: "Subbu", email: "priya.subbu@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["bilingual", "team-lead"], notes: "Interpreted in Spanish at every Build Day she attended this quarter.", frequency: "regular" },
+  { firstName: "Jordan", lastName: "Kim", email: "jordan.kim@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["weekend-only"], frequency: "occasional" },
+  { firstName: "Carla", lastName: "Mendes", email: "carla.mendes@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["kitchen-trained", "bilingual"], frequency: "regular" },
+  { firstName: "Yusuf", lastName: "Al-Hassan", email: "yusuf.alhassan@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["forklift-certified"], frequency: "occasional" },
+  { firstName: "Sasha", lastName: "Petrova", email: "sasha.petrova@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["saturday-availability"], frequency: "occasional" },
+  { firstName: "Daniel", lastName: "Choi", email: "daniel.choi@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Naomi", lastName: "Stein", email: "naomi.stein@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Felix", lastName: "Carter", email: "felix.carter@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Rahul", lastName: "Iyer", email: "rahul.iyer@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: [], frequency: "first-or-second" },
+  { firstName: "Lola", lastName: "Adeyemi", email: "lola.adeyemi@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Kenji", lastName: "Sato", email: "kenji.sato@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: [], frequency: "first-or-second" },
+  { firstName: "Renee", lastName: "Forbes", email: "renee.forbes@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: [], frequency: "first-or-second" },
+  { firstName: "Ari", lastName: "Beck", email: "ari.beck@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: [], frequency: "first-or-second" },
+  { firstName: "Maya", lastName: "Ramos", email: "maya.ramos@lumen.example", corpWorkspaceId: WORKSPACE_IDS.lumen, corpName: "Lumen Industries", tags: [], frequency: "first-or-second" },
+
+  // ─── Boldfish (9) ───────────────────────────────────────────────
+  { firstName: "Jamie", lastName: "Okafor", email: "jamie.okafor@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: ["first-time", "team-lead"], notes: "Boldfish's CSR lead — coordinated their first build day.", frequency: "occasional" },
+  { firstName: "Yara", lastName: "Hadid", email: "yara.hadid@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Theo", lastName: "Lange", email: "theo.lange@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Casey", lastName: "Doyle", email: "casey.doyle@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: [], frequency: "first-or-second" },
+  { firstName: "Sloane", lastName: "Wu", email: "sloane.wu@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Devon", lastName: "Rhodes", email: "devon.rhodes@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: ["weekend-only"], frequency: "occasional" },
+  { firstName: "Quinn", lastName: "Marsh", email: "quinn.marsh@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: ["first-time"], frequency: "first-or-second" },
+  { firstName: "Imani", lastName: "Reed", email: "imani.reed@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: [], frequency: "first-or-second" },
+  { firstName: "Bryce", lastName: "Owens", email: "bryce.owens@boldfish.example", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpName: "Boldfish Co.", tags: [], frequency: "first-or-second" },
+];
+
+const HABITAT_EVENTS: EventSeed[] = [
+  { id: "00000004-0000-4000-8000-000000000100", title: "Q3 Mobile Pantry", description: "Saturday morning mobile pantry distribution at the East Side site. Sorting and serving.", location: "East Side Distribution Center, San Francisco", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 235, hours: 6, checkedIn: 28, noShows: 4, satisfactionAvg: 4.5, satisfactionResponseRate: 0.72 },
+  { id: "00000004-0000-4000-8000-000000000101", title: "Build Day East Side", description: "Framing day on the East Side build. Eight hours, full safety briefing morning of.", location: "East Side build, Bayview SF", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 215, hours: 8, checkedIn: 16, noShows: 0, satisfactionAvg: 4.8, satisfactionResponseRate: 0.81 },
+  { id: "00000004-0000-4000-8000-000000000102", title: "Q4 Mobile Pantry", description: "Pre-holiday mobile pantry at the West Side site. Brought 200 family meal boxes.", location: "West Side Distribution Center, San Francisco", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 160, hours: 6, checkedIn: 31, noShows: 4, satisfactionAvg: 4.5, satisfactionResponseRate: 0.68 },
+  { id: "00000004-0000-4000-8000-000000000103", title: "Holiday Volunteer Drive", description: "Family-friendly holiday packing event. Lighter physical lift, multi-generational.", location: "East Side Distribution Center", corpWorkspaceId: WORKSPACE_IDS.lumen, corpPartnerId: PARTNER_IDS.habitatLumen, daysAgo: 145, hours: 4, checkedIn: 18, noShows: 2, satisfactionAvg: 4.7, satisfactionResponseRate: 0.78 },
+  { id: "00000004-0000-4000-8000-000000000104", title: "MLK Day Service", description: "Day-of-service build at Northside. Mixed corporate and community volunteer mix.", location: "Northside build, Visitacion Valley", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpPartnerId: PARTNER_IDS.habitatBoldfish, daysAgo: 115, hours: 8, checkedIn: 11, noShows: 1, satisfactionAvg: 4.6, satisfactionResponseRate: 0.65 },
+  { id: "00000004-0000-4000-8000-000000000105", title: "Build Day West Side", description: "Drywall and finish carpentry day on the West Side site.", location: "West Side build", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 110, hours: 8, checkedIn: 13, noShows: 1, satisfactionAvg: 4.7, satisfactionResponseRate: 0.77 },
+  { id: "00000004-0000-4000-8000-000000000106", title: "Build Day Northside", description: "Lumen-led build day with cross-team volunteers from their engineering and design groups.", location: "Northside build", corpWorkspaceId: WORKSPACE_IDS.lumen, corpPartnerId: PARTNER_IDS.habitatLumen, daysAgo: 100, hours: 8, checkedIn: 16, noShows: 2, satisfactionAvg: 4.6, satisfactionResponseRate: 0.69 },
+  { id: "00000004-0000-4000-8000-000000000107", title: "Q1 Warehouse Sort", description: "Quarterly sort at the central warehouse. Pallet breakdown and supply triage.", location: "Central Warehouse, SoMa", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 95, hours: 4, checkedIn: 24, noShows: 18, satisfactionAvg: 3.9, satisfactionResponseRate: 0.58, noShowAnalysis: "Of the 18 no-shows, 11 were Acme Engineering, suggesting a calendar conflict with their team offsite that day. The remaining 7 spanned three departments without an obvious pattern; one cited a sick child, two cited a same-day signup change at their manager's request. Recommend reaching out to Acme People Ops to align the Q2 sort calendar with their internal offsite schedule." },
+  { id: "00000004-0000-4000-8000-000000000108", title: "Build Day East (Foundation)", description: "Foundation pour with a mixed Acme + Lumen crew. Coordinated by Hannah Lee.", location: "East Side build", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 85, hours: 8, checkedIn: 16, noShows: 1, satisfactionAvg: 4.8, satisfactionResponseRate: 0.80 },
+  { id: "00000004-0000-4000-8000-000000000109", title: "Q1 Mobile Pantry", description: "Mobile pantry distribution at East Side. Strong attendance, smooth drive-through.", location: "East Side Distribution Center", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 65, hours: 6, checkedIn: 32, noShows: 6, satisfactionAvg: 4.6, satisfactionResponseRate: 0.71 },
+  { id: "00000004-0000-4000-8000-00000000010a", title: "Family Day Build", description: "Family-friendly build event. Volunteers bring kids; supervised lower-risk tasks.", location: "Northside build", corpWorkspaceId: WORKSPACE_IDS.boldfish, corpPartnerId: PARTNER_IDS.habitatBoldfish, daysAgo: 55, hours: 6, checkedIn: 10, noShows: 0, satisfactionAvg: 4.9, satisfactionResponseRate: 0.85 },
+  { id: "00000004-0000-4000-8000-00000000010b", title: "Pre-spring Sort", description: "Inventory sort ahead of the spring build season. Supply triage and warehouse cleanup.", location: "Central Warehouse, SoMa", corpWorkspaceId: WORKSPACE_IDS.acme, corpPartnerId: PARTNER_IDS.habitatAcme, daysAgo: 45, hours: 4, checkedIn: 22, noShows: 2, satisfactionAvg: 4.4, satisfactionResponseRate: 0.62 },
+];
+
+/**
+ * Picks N events for a volunteer based on their frequency tier + corp
+ * affiliation. Frequency:
+ *   - regular: 5-7 events
+ *   - occasional: 2-4
+ *   - first-or-second: 1-2
+ */
+function pickEventsForVolunteer(
+  v: VolunteerSeed,
+  events: EventSeed[],
+): EventSeed[] {
+  // Volunteers only attend events activated by their own corp.
+  const candidate = events.filter((e) => e.corpWorkspaceId === v.corpWorkspaceId);
+  const targetCount =
+    v.frequency === "regular"
+      ? 5 + Math.floor(Math.random() * 3) // 5-7
+      : v.frequency === "occasional"
+        ? 2 + Math.floor(Math.random() * 3) // 2-4
+        : 1 + Math.floor(Math.random() * 2); // 1-2
+  // Bias toward more recent events.
+  const sorted = candidate.slice().sort((a, b) => a.daysAgo - b.daysAgo);
+  return sorted.slice(0, Math.min(targetCount, sorted.length));
+}
+
+async function insertHabitatV2Data() {
+  // 1) Insert all 12 Habitat events. Pre-activated and completed.
+  await db.insert(events).values(
+    HABITAT_EVENTS.map((e) => ({
+      id: e.id,
+      nonprofitWorkspaceId: WORKSPACE_IDS.hgsf,
+      partnerId: e.corpPartnerId,
+      corporateWorkspaceId: e.corpWorkspaceId,
+      title: e.title,
+      description: e.description,
+      location: e.location,
+      startsAt: days(-e.daysAgo),
+      endsAt: days(-e.daysAgo),
+      capacity: e.checkedIn + e.noShows,
+      confirmedCapacity: e.checkedIn + e.noShows,
+      format: "onsite",
+      causeAreas: ["housing"],
+      aiBriefApproved: true,
+      status: "completed",
+      activatedAt: days(-e.daysAgo - 14),
+    })),
+  );
+
+  // 2) For each volunteer, generate signups for their picked events.
+  type SignupRow = typeof eventSignups.$inferInsert;
+  const allSignups: SignupRow[] = [];
+  // Track which volunteers attended each event so we can pin no-shows
+  // deliberately on the Q1 Warehouse Sort.
+  for (const v of VOLUNTEERS) {
+    const picked = pickEventsForVolunteer(v, HABITAT_EVENTS);
+    for (const e of picked) {
+      // Q1 Warehouse Sort no-show injection: tag 11 Acme volunteers as
+      // no-shows to make the demo claim true ("11 of 18 from Acme Engineering").
+      const isWarehouseSort = e.title === "Q1 Warehouse Sort";
+      const noShowQuota = isWarehouseSort && v.corpName === "Acme Robotics";
+      allSignups.push({
+        eventId: e.id,
+        employeeName: `${v.firstName} ${v.lastName}`,
+        employeeEmail: v.email,
+        // We deterministically mark a subset of Acme attendees as no-shows
+        // on the warehouse sort; everyone else checks in.
+        status: noShowQuota ? "no_show" : "checked_in",
+        hoursLogged: noShowQuota ? null : e.hours.toFixed(2),
+      });
+    }
+  }
+  if (allSignups.length > 0) {
+    await db.insert(eventSignups).values(allSignups);
+  }
+
+  // 3) Per-event nonprofit stats. Compute from the EventSeed numbers.
+  // The Q1 Warehouse Sort row gets the Claude no-show analysis paragraph.
+  await db.insert(nonprofitEventStats).values(
+    HABITAT_EVENTS.map((e) => {
+      const totalSignups = e.checkedIn + e.noShows;
+      return {
+        eventId: e.id,
+        nonprofitWorkspaceId: WORKSPACE_IDS.hgsf,
+        signupCount: totalSignups,
+        checkedInCount: e.checkedIn,
+        noShowCount: e.noShows,
+        totalHours: e.checkedIn * e.hours,
+        satisfactionAvg: e.satisfactionAvg.toFixed(2),
+        satisfactionResponseRate: e.satisfactionResponseRate.toFixed(3),
+        // Retention: how many of this event's attendees came back to a later one.
+        // Approximation: 60-80% of regulars, 30-50% of occasionals.
+        retentionFollowupCount: Math.floor(e.checkedIn * 0.6),
+        noShowAnalysisMd: e.noShowAnalysis,
+      };
+    }),
+  );
+
+  // 4) Overlay rows — one per volunteer for Habitat workspace.
+  await db.insert(nonprofitVolunteerOverlay).values(
+    VOLUNTEERS.map((v) => ({
+      nonprofitWorkspaceId: WORKSPACE_IDS.hgsf,
+      employeeEmail: v.email,
+      notes: v.notes ?? null,
+      tags: v.tags,
+      capacitySignal: v.capacitySignal ?? null,
+      firstSeenAt: days(-200),
+      lastSeenAt: days(-30 - Math.floor(Math.random() * 60)),
+    })),
+  );
+
+  // 5) Audit trail: one synthetic entry recording the recap-pending
+  // signal that appears in the workbench pending review feed.
+  await db.insert(auditLog).values([
+    {
+      workspaceId: WORKSPACE_IDS.hgsf,
+      actorKind: "claude",
+      action: "stats.computed",
+      targetType: "event",
+      targetId: "00000004-0000-4000-8000-000000000107",
+      payload: { event: "Q1 Warehouse Sort", flagged: true },
+      at: days(-94),
+    },
+  ]);
+}
+
 async function main() {
   if (!process.env.DATABASE_URL) {
     console.error(
@@ -655,6 +986,8 @@ async function main() {
   await insertRecapAndArtifacts();
   console.log("Inserting audit trail…");
   await insertAuditTrail();
+  console.log("Inserting Habitat v2 data (volunteers + events + overlay + stats)…");
+  await insertHabitatV2Data();
 
   console.log("\n✓ Seed complete.");
   process.exit(0);

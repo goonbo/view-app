@@ -2,7 +2,7 @@
  * Static workspace registry. Mirrors `db/seed.ts` exactly so the workspace
  * switcher works without a live DB connection at Phase 1.
  *
- * Slugs are stable handles used in URLs (`/w/acme/workbench`) and in the
+ * Slugs are stable handles used in URLs and in the
  * `view.activeWorkspace` cookie that drives layout routing.
  */
 export type WorkspaceRegistryEntry = {
@@ -14,21 +14,36 @@ export type WorkspaceRegistryEntry = {
   ein?: string;
   causeAreas: string[];
   size?: number;
+  /**
+   * Corporate-partner attribution token. Used by the nonprofit-side CRM
+   * to color the employer pill on volunteer rows + profiles. Stays
+   * undefined for nonprofit workspaces.
+   */
+  partnerToken?: "acme" | "lumen" | "boldfish";
   /** First user — used in greetings until proper auth ships. */
   primaryUser: { name: string; firstName: string; role: string; email: string };
   /** Where to land when this workspace is selected from `/`. */
   homePath: string;
+  /**
+   * Fixture-only workspaces don't get a card on the landing page
+   * (Lumen and Boldfish are real to the data layer but invisible to
+   * the workspace switcher — they represent corporate partners whose
+   * employees show up on Habitat's CRM).
+   */
+  hideOnLanding?: boolean;
 };
 
 /**
  * Deterministic UUIDs — stable across seed runs so dev URLs survive a wipe.
- * Generated once by hand from short seeds; do not regenerate without also
- * resetting any captured fixtures that reference them.
  */
 export const WORKSPACE_IDS = {
   acme: "61636d65-0000-4000-8000-000000000c40",
   gafb: "67616662-0000-4000-8000-000000000c30",
   bgca: "62676361-0000-4000-8000-000000000c30",
+  // v2 — nonprofit-workspace expansion
+  hgsf: "68677366-0000-4000-8000-000000000c30", // Habitat for Humanity GSF
+  lumen: "6c756d65-0000-4000-8000-000000000c40", // Lumen Industries (fixture-only)
+  boldfish: "626f6c64-0000-4000-8000-000000000c40", // Boldfish Co. (fixture-only)
 } as const;
 
 export const WORKSPACES: WorkspaceRegistryEntry[] = [
@@ -39,6 +54,7 @@ export const WORKSPACES: WorkspaceRegistryEntry[] = [
     type: "corporate",
     accent: "cyan",
     size: 320,
+    partnerToken: "acme",
     causeAreas: ["education", "food security", "workforce development"],
     primaryUser: {
       name: "Maya Chen",
@@ -47,6 +63,58 @@ export const WORKSPACES: WorkspaceRegistryEntry[] = [
       email: "maya@acme.example",
     },
     homePath: "/workbench",
+  },
+  {
+    id: WORKSPACE_IDS.lumen,
+    slug: "lumen",
+    name: "Lumen Industries",
+    type: "corporate",
+    accent: "cyan",
+    size: 120,
+    partnerToken: "lumen",
+    causeAreas: ["housing", "education"],
+    primaryUser: {
+      name: "Priya Subbu",
+      firstName: "Priya",
+      role: "Community Impact Lead",
+      email: "priya@lumen.example",
+    },
+    homePath: "/workbench",
+    hideOnLanding: true,
+  },
+  {
+    id: WORKSPACE_IDS.boldfish,
+    slug: "boldfish",
+    name: "Boldfish Co.",
+    type: "corporate",
+    accent: "cyan",
+    size: 80,
+    partnerToken: "boldfish",
+    causeAreas: ["housing", "community"],
+    primaryUser: {
+      name: "Jamie Okafor",
+      firstName: "Jamie",
+      role: "People Operations",
+      email: "jamie@boldfish.example",
+    },
+    homePath: "/workbench",
+    hideOnLanding: true,
+  },
+  {
+    id: WORKSPACE_IDS.hgsf,
+    slug: "hgsf",
+    name: "Habitat for Humanity Greater SF",
+    type: "nonprofit",
+    accent: "green",
+    ein: "94-3088881",
+    causeAreas: ["housing", "community"],
+    primaryUser: {
+      name: "Lina Tran",
+      firstName: "Lina",
+      role: "Volunteer & Partnerships Lead",
+      email: "lina@habitatgsf.example",
+    },
+    homePath: "/np/workbench",
   },
   {
     id: WORKSPACE_IDS.gafb,

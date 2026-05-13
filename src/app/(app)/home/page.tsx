@@ -1,16 +1,15 @@
 import { redirect } from "next/navigation";
-import { Placeholder } from "@/components/shared/Placeholder";
 import { getActiveWorkspaceOrThrow } from "@/lib/active-workspace";
 
-export default async function NonprofitHomePage() {
+/**
+ * Legacy nonprofit landing. The v2 build moves this surface to
+ * `/np/workbench` (richer dashboard with ambient stats + pending
+ * review). Nonprofit viewers bounce there; corporate viewers
+ * (who would never reach here via the sidebar nav) get sent to
+ * their workbench too.
+ */
+export default async function NonprofitHomeRedirectPage() {
   const ws = await getActiveWorkspaceOrThrow();
-  if (ws.type !== "nonprofit") redirect("/workbench");
-
-  return (
-    <Placeholder
-      phase="Phase 3"
-      title={`Hi ${ws.primaryUser.firstName}`}
-      description="Your CRM-shaped workspace for creating events, running donation campaigns, managing rosters, and tracking corporate partner relationships."
-    />
-  );
+  if (ws.type === "nonprofit") redirect("/np/workbench");
+  redirect("/workbench");
 }
